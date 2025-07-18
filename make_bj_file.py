@@ -15,12 +15,10 @@ file_path = os.path.join(folder_path, file_name)
 
 # 템플릿 내용
 template = f"""# 백준 {problem_number}번
+# 입력:
 
-def main():
-    pass
+# 출력:
 
-if __name__ == "__main__":
-    main()
 """
 
 # 파일 생성
