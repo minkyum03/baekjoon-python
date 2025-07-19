@@ -8,66 +8,35 @@
 # # 출력:
 # 2 0
 
-
-# N, M, B = map(int, input().split())
-# arr =[]
-# for _ in range(N):
-#     row = list(map(int, input().split()))
-#     arr.append(row)
-
-# def remove_block_time(i, j):
-#     arr[i][j] -= 1, B + 1
-#     return 2
-# def put_on_block_time(i, j):
-#     arr[i][j] += 1, B - 1
-#     return 1
-
-# max = arr[0][0]
-# for n in range(N):
-#     for m in range(M):
-#         if arr[n][m] > max:
-#             max = arr[n][m]
-
-# # 가장 높은곳 - 모든 높이 == 0이면 완료
-# count = 0
-
-# for n in range(N):
-#     for m in range(M):
-#         if max - arr[n][m] == 0: continue
-#         else:
-#             count = max - arr[n][m]
-
-# # 모자란 블럭의 수 <= 처음 가지고있던 블럭의 수 일때
-# if (B - count) >= 0:
-#     time = 0
-#     for n in range(N):
-#         for m in range(M):
-#             time += max - arr[n][m]
-#     print(time, max)
-# # 처음가지고있던 블럭이 다 채우기엔 모자랄 때
-# else:
-#     time = 0
+import sys
+input = sys.stdin.readline #빠른 입력
 
 N, M, B = map(int, input().split())
-arr =[]
+
+#높이별 블록 개수 저장용 리스트(0~256)
+height_count = [0] * 257
+
+#입력받기 & 높이 개수 세기
 for _ in range(N):
     row = list(map(int, input().split()))
-    arr.append(row)
+    for h in row:
+        height_count[h] += 1
 
-def get_time_and_inventory(arr, target_heigt, block):
+def calculate_time(target_heigt, block):
     time = 0
     inventory = block
-    for row in arr:
-        for height in row:
-            diff = height - target_heigt
-            if diff > 0:
-                #블록 제거
-                time += 2 * diff
-                inventory += diff
-            elif diff < 0:
-                #블록 추가
-                time += (-diff) * 1
-                inventory -= (-diff)
+    for h in range(257):
+        diff = h - target_heigt
+        count = height_count[h]
+        if diff > 0:
+            #블록 제거
+            time += 2 * diff * count
+            inventory += diff  * count
+        elif diff < 0: 
+            # 블록 추가
+            time += (-diff) * count
+            inventory -= (-diff) * count
+
     if inventory < 0:
         return float('inf'), -1 #불가능한경우
     else:
@@ -76,7 +45,7 @@ def get_time_and_inventory(arr, target_heigt, block):
 min_time = float('inf')
 best_height = 0
 for h in range(257):
-    time, height = get_time_and_inventory(arr, h, B)
+    time, height = calculate_time(h, B)
     if time < min_time or (time == min_time and height > best_height):
         min_time = time
         best_height = height
