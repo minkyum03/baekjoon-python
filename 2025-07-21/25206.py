@@ -53,5 +53,5 @@ for student in Student_grade:
         total_credits += credit
         total_points += credit * grade_to_point[grade]
 
-gpa = total_credits / total_points
+gpa = total_points / total_credits
 print(round(gpa, 6))
